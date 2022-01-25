@@ -13,6 +13,9 @@ inputs:
     description: 'Tools'
     required: true
     default: 'cs2pr'
+  app-local-php:
+    description: "App Local PHP Config"
+    required: true
 outputs:
   install-dependencies:
     description: "Install Dependencies"
@@ -30,6 +33,8 @@ outputs:
 runs:
   using: "composite"
   steps:
+    env:
+      APP_LOCAL_PHP: ${{ inputs.app-local-php }}
     - uses: actions/checkout@v2
 
     - name: Setup PHP
@@ -39,7 +44,7 @@ runs:
         extensions: ${{ inputs.extensions }}
         tools: ${{ inputs.tools }}
 
-    - run: echo "${{ secrets.APP_LOCAL_PHP_DEV }}" > ./config/app_local.php
+    - run: echo "${{ env.APP_LOCAL_PHP }}" > ./config/app_local.php
       shell: bash
 
     - id: install-dependencies
