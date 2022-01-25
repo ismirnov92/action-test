@@ -37,3 +37,4 @@ runs:
 
     - name: Run PHPStan
       run: vendor/bin/phpstan --configuration=phpstan.neon analyse --error-format=checkstyle --no-progress | cs2pr
+      
