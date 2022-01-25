@@ -39,6 +39,9 @@ runs:
         extensions: ${{ inputs.extensions }}
         tools: ${{ inputs.tools }}
 
+    - run: echo "${{ secrets.APP_LOCAL_PHP_DEV }}" > ./config/app_local.php
+      shell: bash
+
     - id: install-dependencies
       run: composer install --no-progress --prefer-dist --optimize-autoloader
       shell: bash
