@@ -13,6 +13,19 @@ inputs:
     description: 'Tools'
     required: true
     default: 'cs2pr'
+outputs:
+  install-dependencies:
+    description: "Install Dependencies"
+    value: ${{ steps.install-dependencies }}
+  run-php-code-sniffer:
+    description: "Run PHP CodeSniffer"
+    value: ${{ steps.run-php-code-sniffer }}
+  run-php-mess-detector:
+    description: "Run PHP MessDetector"
+    value: ${{ steps.run-php-mess-detector }}
+  run-php-stan:
+    description: "Run PHP Stan"
+    value: ${{ steps.run-php-stan }}
   
 runs:
   using: "composite"
@@ -26,15 +39,19 @@ runs:
         extensions: ${{ inputs.extensions }}
         tools: ${{ inputs.tools }}
 
-    - name: Install dependencies
+    - id: install-dependencies
       run: composer install --no-progress --prefer-dist --optimize-autoloader
+      shell: bash
     
-    - name: Run PHP_CodeSniffer
+    - id: run-php-code-sniffer
       run: vendor/bin/phpcs -p src/ tests/ --report=checkstyle -q | cs2pr
+      shell: bash
 
-    - name: Run PHP Mess Detector
+    - id: run-php-mess-detector
       run: vendor/bin/phpmd src/,tests/ github phpmd-ruleset.xml
+      shell: bash
 
-    - name: Run PHPStan
+    - id: run-php-stan
       run: vendor/bin/phpstan --configuration=phpstan.neon analyse --error-format=checkstyle --no-progress | cs2pr
+      shell: bash
       
