@@ -33,8 +33,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    env:
-      APP_LOCAL_PHP: ${{ inputs.app-local-php }}
     - uses: actions/checkout@v2
 
     - name: Setup PHP
@@ -44,7 +42,10 @@ runs:
         extensions: ${{ inputs.extensions }}
         tools: ${{ inputs.tools }}
 
-    - run: echo "${{ env.APP_LOCAL_PHP }}" > ./config/app_local.php
+    - name: App PHP Local Config
+      run: echo "${{ env.APP_LOCAL_PHP }}" > ./config/app_local.php
+      env:
+        APP_LOCAL_PHP: ${{ inputs.app-local-php }}
       shell: bash
 
     - id: install-dependencies
